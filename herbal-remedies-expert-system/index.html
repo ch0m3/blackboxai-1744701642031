@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Herbal Remedies Expert System</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-green-50 min-h-screen flex flex-col items-center p-4">
+  <header class="mb-8 text-center">
+    <h1 class="text-4xl font-bold text-green-800 mb-2">Herbal Remedies Expert System</h1>
+    <p class="text-green-700 text-lg">Find herbal remedies for minor elements and symptoms</p>
+  </header>
+
+  <main class="w-full max-w-3xl bg-white rounded-lg shadow p-6">
+    <form id="remedyForm" class="space-y-6">
+      <div>
+        <label for="symptoms" class="block text-green-800 font-semibold mb-2">Select Symptoms:</label>
+        <select id="symptoms" multiple class="w-full border border-green-300 rounded p-2" size="5" aria-label="Select symptoms">
+          <!-- Options populated by JS -->
+        </select>
+      </div>
+      <div>
+        <label for="minorElements" class="block text-green-800 font-semibold mb-2">Select Minor Elements:</label>
+        <select id="minorElements" multiple class="w-full border border-green-300 rounded p-2" size="5" aria-label="Select minor elements">
+          <!-- Options populated by JS -->
+        </select>
+      </div>
+      <button type="submit" class="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">Get Remedies</button>
+    </form>
+
+    <section id="results" class="mt-8">
+      <h2 class="text-2xl font-bold text-green-800 mb-4">Recommended Herbal Remedies</h2>
+      <ul id="remedyList" class="list-disc list-inside text-green-700"></ul>
+    </section>
+  </main>
+
+  <footer class="mt-auto text-center text-green-600 text-sm py-4">
+    &copy; 2024 Herbal Remedies Expert System
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

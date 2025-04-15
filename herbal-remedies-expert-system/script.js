@@ -1,11 +1,13 @@
-// Dataset of symptoms, minor elements, and corresponding herbal remedies
 const data = {
   symptoms: [
     "Headache",
     "Fatigue",
     "Digestive Issues",
     "Skin Irritation",
-    "Cold & Flu"
+    "Cold & Flu",
+    "Chest Pain",
+    "Severe Headache",
+    "Shortness of Breath"
   ],
   minorElements: [
     "Iron Deficiency",
@@ -50,10 +52,14 @@ const data = {
       forSymptoms: ["Fatigue"],
       forElements: ["Vitamin D Deficiency"]
     }
+  ],
+  majorSymptoms: [
+    "Chest Pain",
+    "Severe Headache",
+    "Shortness of Breath"
   ]
 };
 
-// Populate select options
 function populateSelectOptions() {
   const symptomsSelect = document.getElementById("symptoms");
   const elementsSelect = document.getElementById("minorElements");
@@ -73,12 +79,10 @@ function populateSelectOptions() {
   });
 }
 
-// Get selected options from a multi-select
 function getSelectedOptions(selectElement) {
   return Array.from(selectElement.selectedOptions).map(option => option.value);
 }
 
-// Find remedies matching selected symptoms or elements
 function findRemedies(selectedSymptoms, selectedElements) {
   return data.remedies.filter(remedy => {
     const symptomMatch = remedy.forSymptoms.some(symptom => selectedSymptoms.includes(symptom));
@@ -87,34 +91,46 @@ function findRemedies(selectedSymptoms, selectedElements) {
   });
 }
 
-// Display remedies in the UI
-function displayRemedies(remedies) {
+function classifySymptoms(selectedSymptoms) {
+  return selectedSymptoms.some(symptom => data.majorSymptoms.includes(symptom));
+}
+
+function displayResults(isMajor, remedies) {
+  const resultsSection = document.getElementById("results");
   const remedyList = document.getElementById("remedyList");
   remedyList.innerHTML = "";
 
-  if (remedies.length === 0) {
-    remedyList.innerHTML = "<li>No remedies found for the selected symptoms or elements.</li>";
-    return;
+  if (isMajor) {
+    resultsSection.querySelector("h2").textContent = "Major Ailment Detected";
+    remedyList.innerHTML = "<li class='text-red-600 font-semibold'>Your symptoms indicate a major ailment. Please see a doctor immediately.</li>";
+  } else {
+    resultsSection.querySelector("h2").textContent = "Recommended Herbal Remedies";
+    if (remedies.length === 0) {
+      remedyList.innerHTML = "<li>No remedies found for the selected symptoms or elements.</li>";
+    } else {
+      remedies.forEach(remedy => {
+        const li = document.createElement("li");
+        li.textContent = remedy.name;
+        remedyList.appendChild(li);
+      });
+    }
   }
-
-  remedies.forEach(remedy => {
-    const li = document.createElement("li");
-    li.textContent = remedy.name;
-    remedyList.appendChild(li);
-  });
 }
 
-// Handle form submission
 function handleFormSubmit(event) {
   event.preventDefault();
   const selectedSymptoms = getSelectedOptions(document.getElementById("symptoms"));
   const selectedElements = getSelectedOptions(document.getElementById("minorElements"));
 
-  const remedies = findRemedies(selectedSymptoms, selectedElements);
-  displayRemedies(remedies);
+  const isMajor = classifySymptoms(selectedSymptoms);
+  if (isMajor) {
+    displayResults(true, []);
+  } else {
+    const remedies = findRemedies(selectedSymptoms, selectedElements);
+    displayResults(false, remedies);
+  }
 }
 
-// Initialize app
 function init() {
   populateSelectOptions();
   document.getElementById("remedyForm").addEventListener("submit", handleFormSubmit);

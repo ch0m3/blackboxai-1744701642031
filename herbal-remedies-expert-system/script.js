@@ -68,6 +68,9 @@ function populateSelectOptions() {
     const option = document.createElement("option");
     option.value = symptom;
     option.textContent = symptom;
+    if (data.majorSymptoms.includes(symptom)) {
+      option.classList.add('text-red-600', 'font-semibold');
+    }
     symptomsSelect.appendChild(option);
   });
 
@@ -95,22 +98,65 @@ function classifySymptoms(selectedSymptoms) {
   return selectedSymptoms.some(symptom => data.majorSymptoms.includes(symptom));
 }
 
+function createRemedyItem(remedy) {
+  const li = document.createElement("li");
+  li.className = "p-3 bg-green-50 rounded-lg hover:bg-green-100 transition-all duration-300 animate-fade-in flex items-center";
+  
+  const icon = document.createElement("i");
+  icon.className = "fas fa-leaf text-green-600 mr-2";
+  li.appendChild(icon);
+  
+  const text = document.createElement("span");
+  text.textContent = remedy.name;
+  li.appendChild(text);
+  
+  return li;
+}
+
 function displayResults(isMajor, remedies) {
   const resultsSection = document.getElementById("results");
   const remedyList = document.getElementById("remedyList");
   remedyList.innerHTML = "";
 
   if (isMajor) {
-    resultsSection.querySelector("h2").textContent = "Major Ailment Detected";
-    remedyList.innerHTML = "<li class='text-red-600 font-semibold'>Your symptoms indicate a major ailment. Please see a doctor immediately.</li>";
+    resultsSection.querySelector("h2").textContent = "⚠️ Major Ailment Detected";
+    resultsSection.querySelector("h2").className = "text-2xl font-bold text-red-600 mb-4 flex items-center animate-pulse-once";
+    
+    const li = document.createElement("li");
+    li.className = "p-4 bg-red-50 rounded-lg border-l-4 border-red-600 animate-slide-up flex items-center";
+    
+    const icon = document.createElement("i");
+    icon.className = "fas fa-exclamation-triangle text-red-600 mr-2";
+    li.appendChild(icon);
+    
+    const text = document.createElement("span");
+    text.className = "text-red-600 font-semibold";
+    text.textContent = "Your symptoms indicate a major ailment. Please see a doctor immediately.";
+    li.appendChild(text);
+    
+    remedyList.appendChild(li);
   } else {
     resultsSection.querySelector("h2").textContent = "Recommended Herbal Remedies";
+    resultsSection.querySelector("h2").className = "text-2xl font-bold text-green-800 mb-4 flex items-center";
+    
     if (remedies.length === 0) {
-      remedyList.innerHTML = "<li>No remedies found for the selected symptoms or elements.</li>";
+      const li = document.createElement("li");
+      li.className = "p-4 bg-yellow-50 rounded-lg border-l-4 border-yellow-600 animate-slide-up flex items-center";
+      
+      const icon = document.createElement("i");
+      icon.className = "fas fa-info-circle text-yellow-600 mr-2";
+      li.appendChild(icon);
+      
+      const text = document.createElement("span");
+      text.className = "text-yellow-600";
+      text.textContent = "No remedies found for the selected symptoms or elements.";
+      li.appendChild(text);
+      
+      remedyList.appendChild(li);
     } else {
-      remedies.forEach(remedy => {
-        const li = document.createElement("li");
-        li.textContent = remedy.name;
+      remedies.forEach((remedy, index) => {
+        const li = createRemedyItem(remedy);
+        li.style.animationDelay = `${index * 0.1}s`;
         remedyList.appendChild(li);
       });
     }
